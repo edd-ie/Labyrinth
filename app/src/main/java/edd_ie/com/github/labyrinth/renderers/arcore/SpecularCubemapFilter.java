@@ -1,19 +1,4 @@
-/*
- * Copyright 2020 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-package com.google.ar.core.examples.java.common.samplerender.arcore;
+package edd_ie.com.github.labyrinth.renderers.arcore;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
@@ -22,12 +7,12 @@ import android.media.Image;
 import android.opengl.GLES30;
 import android.util.Log;
 import com.google.ar.core.ImageFormat;
-import com.google.ar.core.examples.java.common.samplerender.GLError;
-import com.google.ar.core.examples.java.common.samplerender.Mesh;
-import com.google.ar.core.examples.java.common.samplerender.SampleRender;
-import com.google.ar.core.examples.java.common.samplerender.Shader;
-import com.google.ar.core.examples.java.common.samplerender.Texture;
-import com.google.ar.core.examples.java.common.samplerender.VertexBuffer;
+import edd_ie.com.github.labyrinth.renderers.GLError;
+import edd_ie.com.github.labyrinth.renderers.Mesh;
+import edd_ie.com.github.labyrinth.renderers.SampleRender;
+import edd_ie.com.github.labyrinth.renderers.Shader;
+import edd_ie.com.github.labyrinth.renderers.Texture;
+import edd_ie.com.github.labyrinth.renderers.VertexBuffer;
 import java.io.Closeable;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -228,8 +213,8 @@ public class SpecularCubemapFilter implements Closeable {
    * Updates and filters the provided cubemap textures from ARCore.
    *
    * <p>This method should be called every frame with the result of {@link
-   * com.google.ar.core.LightEstimate.acquireEnvironmentalHdrCubeMap()} to update the filtered
-   * cubemap texture, accessible via {@link getFilteredCubemapTexture()}.
+   * //com.google.ar.core.LightEstimate.acquireEnvironmentalHdrCubeMap()} to update the filtered
+   * cubemap texture, accessible via {@link //getFilteredCubemapTexture()}.
    *
    * <p>The given {@link Image}s will be closed by this method, even if an exception occurs.
    */
