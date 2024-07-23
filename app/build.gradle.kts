@@ -33,6 +33,13 @@ android {
 
 dependencies {
 
+    // ARCore (Google Play Services for AR) library.
+    implementation(libs.core)
+
+    // Obj - a simple Wavefront OBJ file loader
+    // https://github.com/javagl/Obj
+    implementation(libs.obj)
+
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
