@@ -1,5 +1,6 @@
 package edd_ie.com.github.labyrinth;
 
+import android.media.Image;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,7 +11,10 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.ar.core.Camera;
 import com.google.ar.core.Config;
+import com.google.ar.core.Frame;
+import com.google.ar.core.TrackingState;
 import com.google.ar.core.exceptions.CameraNotAvailableException;
 import com.google.ar.core.exceptions.NotYetAvailableException;
 import com.google.ar.core.exceptions.UnavailableApkTooOldException;
@@ -25,6 +29,8 @@ import com.google.ar.core.Session;
 import com.google.ar.core.ArCoreApk.Availability;
 import com.google.ar.core.Config.InstantPlacementMode;
 
+import java.io.IOException;
+
 import edd_ie.com.github.labyrinth.helpers.CameraPermissionHelper;
 import edd_ie.com.github.labyrinth.helpers.DepthSettings;
 import edd_ie.com.github.labyrinth.helpers.FullScreenHelper;
@@ -32,6 +38,7 @@ import edd_ie.com.github.labyrinth.helpers.InstantPlacementSettings;
 import edd_ie.com.github.labyrinth.helpers.SnackbarHelper;
 import edd_ie.com.github.labyrinth.helpers.DisplayRotationHelper;
 import edd_ie.com.github.labyrinth.renderers.SampleRender;
+import edd_ie.com.github.labyrinth.renderers.arcore.BackgroundRenderer;
 
 
 public class MainActivity extends AppCompatActivity implements SampleRender.Renderer {
@@ -49,6 +56,8 @@ public class MainActivity extends AppCompatActivity implements SampleRender.Rend
     private final DepthSettings depthSettings = new DepthSettings();
     private boolean[] depthSettingsMenuDialogCheckboxes = new boolean[2];
     private SampleRender render;
+    private boolean hasSetTextureNames = false;
+    private BackgroundRenderer backgroundRenderer;
 
 
     @Override
@@ -217,6 +226,7 @@ public class MainActivity extends AppCompatActivity implements SampleRender.Rend
 
     @Override
     public void onSurfaceCreated(SampleRender render) {
+        backgroundRenderer = new BackgroundRenderer(render);
 
     }
 
@@ -227,6 +237,37 @@ public class MainActivity extends AppCompatActivity implements SampleRender.Rend
 
     @Override
     public void onDrawFrame(SampleRender render) {
+        if (session == null) {
+            return;
+        }
+
+        // Texture names should only be set once on a GL thread unless they change. This is done during
+        // onDrawFrame rather than onSurfaceCreated since the session is not guaranteed to have been
+        // initialized during the execution of onSurfaceCreated.
+        if (!hasSetTextureNames) {
+            session.setCameraTextureNames(
+                    new int[] {backgroundRenderer.getCameraColorTexture().getTextureId()});
+            hasSetTextureNames = true;
+        }
+
+        // -- Update per-frame state
+
+        // Notify ARCore session that the view size changed so that the perspective matrix and
+        // the video background can be properly adjusted.
+        displayRotationHelper.updateSessionIfNeeded(session);
+
+        // Obtain the current frame from the AR Session. When the configuration is set to
+        // UpdateMode.BLOCKING (it is by default), this will throttle the rendering to the
+        // camera framerate.
+        Frame frame;
+        try {
+            frame = session.update();
+        } catch (CameraNotAvailableException e) {
+            Log.e(TAG, "Camera not available during onDrawFrame", e);
+            messageSnackbarHelper.showError(this, "Camera not available. Try restarting the app.");
+            return;
+        }
+        Camera camera = frame.getCamera();
 
     }
 }
