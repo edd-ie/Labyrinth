@@ -8,7 +8,12 @@ appcompat = "1.7.0"
 material = "1.12.0"
 activity = "1.9.0"
 constraintlayout = "2.1.4"
+materialVersion = "1.9.0"
 obj = "0.4.0"
+kotlin = "2.0.0"
+coreKtx = "1.13.1"
+monitor = "1.7.1"
+junitJunit = "4.12"
 
 [libraries]
 core = { module = "com.google.ar:core", version.ref = "core" }
@@ -19,8 +24,13 @@ appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "a
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+material-v190 = { module = "com.google.android.material:material", version.ref = "materialVersion" }
 obj = { module = "de.javagl:obj", version.ref = "obj" }
+core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+monitor = { group = "androidx.test", name = "monitor", version.ref = "monitor" }
+junit-junit = { group = "junit", name = "junit", version.ref = "junitJunit" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
+jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 

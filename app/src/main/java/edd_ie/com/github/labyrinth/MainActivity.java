@@ -1,42 +1,33 @@
 package edd_ie.com.github.labyrinth;
 
-import android.media.Image;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
+import com.google.ar.core.ArCoreApk;
+import com.google.ar.core.ArCoreApk.Availability;
 import com.google.ar.core.Camera;
 import com.google.ar.core.Config;
+import com.google.ar.core.Config.InstantPlacementMode;
 import com.google.ar.core.Frame;
-import com.google.ar.core.TrackingState;
+import com.google.ar.core.Session;
 import com.google.ar.core.exceptions.CameraNotAvailableException;
-import com.google.ar.core.exceptions.NotYetAvailableException;
 import com.google.ar.core.exceptions.UnavailableApkTooOldException;
 import com.google.ar.core.exceptions.UnavailableArcoreNotInstalledException;
 import com.google.ar.core.exceptions.UnavailableDeviceNotCompatibleException;
 import com.google.ar.core.exceptions.UnavailableSdkTooOldException;
 import com.google.ar.core.exceptions.UnavailableUserDeclinedInstallationException;
-import android.widget.Toast;
-
-import com.google.ar.core.ArCoreApk;
-import com.google.ar.core.Session;
-import com.google.ar.core.ArCoreApk.Availability;
-import com.google.ar.core.Config.InstantPlacementMode;
-
-import java.io.IOException;
 
 import edd_ie.com.github.labyrinth.helpers.CameraPermissionHelper;
 import edd_ie.com.github.labyrinth.helpers.DepthSettings;
+import edd_ie.com.github.labyrinth.helpers.DisplayRotationHelper;
 import edd_ie.com.github.labyrinth.helpers.FullScreenHelper;
 import edd_ie.com.github.labyrinth.helpers.InstantPlacementSettings;
 import edd_ie.com.github.labyrinth.helpers.SnackbarHelper;
-import edd_ie.com.github.labyrinth.helpers.DisplayRotationHelper;
 import edd_ie.com.github.labyrinth.renderers.Framebuffer;
 import edd_ie.com.github.labyrinth.renderers.SampleRender;
 import edd_ie.com.github.labyrinth.renderers.arcore.BackgroundRenderer;
@@ -281,52 +272,6 @@ public class MainActivity extends AppCompatActivity implements SampleRender.Rend
         }
         Camera camera = frame.getCamera();
 
-        // Update BackgroundRenderer state to match the depth settings.
-        try {
-            backgroundRenderer.setUseDepthVisualization(
-                    render, depthSettings.depthColorVisualizationEnabled());
-            backgroundRenderer.setUseOcclusion(render, depthSettings.useDepthForOcclusion());
-        } catch (IOException e) {
-            Log.e(TAG, "Failed to read a required asset file", e);
-            messageSnackbarHelper.showError(this, "Failed to read a required asset file: " + e);
-            return;
-        }
-        // BackgroundRenderer.updateDisplayGeometry must be called every frame to update the coordinates
-        // used to draw the background camera image.
-        backgroundRenderer.updateDisplayGeometry(frame);
-
-        if (camera.getTrackingState() == TrackingState.TRACKING
-                && (depthSettings.useDepthForOcclusion()
-                || depthSettings.depthColorVisualizationEnabled())) {
-            try (Image depthImage = frame.acquireDepthImage16Bits()) {
-                backgroundRenderer.updateCameraDepthTexture(depthImage);
-            } catch (NotYetAvailableException e) {
-                // This normally means that depth data is not available yet. This is normal so we will not
-                // spam the logcat with this.
-            }
-        }
-
-
-        // -- Draw background
-
-        if (frame.getTimestamp() != 0) {
-            // Suppress rendering if the camera did not produce the first frame yet. This is to avoid
-            // drawing possible leftover data from previous sessions if the texture is reused.
-            backgroundRenderer.drawBackground(render);
-        }
-
-        // Get projection matrix.
-        camera.getProjectionMatrix(projectionMatrix, 0, Z_NEAR, Z_FAR);
-
-        // Get camera matrix and draw.
-        camera.getViewMatrix(viewMatrix, 0);
-
-        // Visualize anchors created by touch.
-        render.clear(virtualSceneFramebuffer, 0f, 0f, 0f, 0f);
-
-
-        // Compose the virtual scene with the background.
-        backgroundRenderer.drawVirtualScene(render, virtualSceneFramebuffer, Z_NEAR, Z_FAR);
     }
 
 
