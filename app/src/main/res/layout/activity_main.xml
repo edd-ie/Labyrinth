@@ -18,6 +18,29 @@
         android:layout_gravity="top"
         />
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:id="@+id/searchPlane"
+        >
+
+        <EditText
+            android:id="@+id/search_bar"
+            android:layout_width="259dp"
+            android:layout_height="53dp"
+            android:layout_marginTop="28dp"
+            android:layout_marginLeft="28dp"
+            android:ems="10"
+            android:inputType="text"
+            android:paddingLeft="5dp"
+            android:text="Start location" />
+
+    </RelativeLayout>
+
 
     <RelativeLayout
         android:id="@+id/canvas"

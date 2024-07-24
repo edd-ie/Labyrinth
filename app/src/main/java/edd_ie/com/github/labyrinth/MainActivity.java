@@ -1,12 +1,16 @@
 package edd_ie.com.github.labyrinth;
 
+import android.graphics.Color;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.google.ar.core.ArCoreApk;
 import com.google.ar.core.ArCoreApk.Availability;
@@ -34,6 +38,14 @@ import edd_ie.com.github.labyrinth.renderers.arcore.BackgroundRenderer;
 
 
 public class MainActivity extends AppCompatActivity implements SampleRender.Renderer {
+    //Views
+    private GLSurfaceView surfaceView;
+    private View searchPlane;
+    private EditText searchBar;
+    private View canvas;
+
+
+
     private Session session;
     private boolean installRequested;
 
@@ -43,7 +55,6 @@ public class MainActivity extends AppCompatActivity implements SampleRender.Rend
     private boolean[] instantPlacementSettingsMenuDialogCheckboxes = new boolean[1];
 
     // Rendering. The Renderers are created here, and initialized when the GL surface is created.
-    private GLSurfaceView surfaceView;
     private DisplayRotationHelper displayRotationHelper;
     private final DepthSettings depthSettings = new DepthSettings();
     private boolean[] depthSettingsMenuDialogCheckboxes = new boolean[2];
@@ -68,6 +79,12 @@ public class MainActivity extends AppCompatActivity implements SampleRender.Rend
         setContentView(R.layout.activity_main);
 
         surfaceView = findViewById(R.id.surfaceview);
+        searchPlane = findViewById(R.id.searchPlane);
+        searchBar = findViewById(R.id.search_bar);
+        canvas = findViewById(R.id.canvas);
+
+        searchFocus();
+
         displayRotationHelper = new DisplayRotationHelper(/* context= */ this);
 
         // Set up touch listener.
@@ -274,5 +291,24 @@ public class MainActivity extends AppCompatActivity implements SampleRender.Rend
 
     }
 
+    private void searchFocus(){
+        if(searchBar!=null){
+            searchBar.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                   if(hasFocus){
+                       canvas.setVisibility(View.INVISIBLE);
+                       surfaceView.setVisibility(View.INVISIBLE);
+                       searchPlane.setBackgroundColor(ContextCompat.getColor(v.getContext(), R.color.white));
+                   }
+                   else{
+                       searchPlane.setBackgroundColor(Color.TRANSPARENT);
+                       canvas.setVisibility(View.VISIBLE);
+                       surfaceView.setVisibility(View.VISIBLE);
+                   }
+                }
+            });
+        }
+    }
 
 }
