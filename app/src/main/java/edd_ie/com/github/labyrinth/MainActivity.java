@@ -37,6 +37,7 @@ import edd_ie.com.github.labyrinth.helpers.FullScreenHelper;
 import edd_ie.com.github.labyrinth.helpers.InstantPlacementSettings;
 import edd_ie.com.github.labyrinth.helpers.SnackbarHelper;
 import edd_ie.com.github.labyrinth.helpers.DisplayRotationHelper;
+import edd_ie.com.github.labyrinth.renderers.Framebuffer;
 import edd_ie.com.github.labyrinth.renderers.SampleRender;
 import edd_ie.com.github.labyrinth.renderers.arcore.BackgroundRenderer;
 
@@ -57,7 +58,16 @@ public class MainActivity extends AppCompatActivity implements SampleRender.Rend
     private boolean[] depthSettingsMenuDialogCheckboxes = new boolean[2];
     private SampleRender render;
     private boolean hasSetTextureNames = false;
+
     private BackgroundRenderer backgroundRenderer;
+    private Framebuffer virtualSceneFramebuffer;
+
+    private static final float Z_NEAR = 0.1f;
+    private static final float Z_FAR = 100f;
+
+    // Temporary matrix allocated here to reduce number of allocations for each frame.
+    private final float[] projectionMatrix = new float[16];
+    private final float[] viewMatrix = new float[16];
 
 
     @Override
@@ -227,12 +237,14 @@ public class MainActivity extends AppCompatActivity implements SampleRender.Rend
     @Override
     public void onSurfaceCreated(SampleRender render) {
         backgroundRenderer = new BackgroundRenderer(render);
+        virtualSceneFramebuffer = new Framebuffer(render, /* width= */ 1, /* height= */ 1);
 
     }
 
     @Override
     public void onSurfaceChanged(SampleRender render, int width, int height) {
-
+        displayRotationHelper.onSurfaceChanged(width, height);
+        virtualSceneFramebuffer.resize(width, height);
     }
 
     @Override
@@ -269,5 +281,53 @@ public class MainActivity extends AppCompatActivity implements SampleRender.Rend
         }
         Camera camera = frame.getCamera();
 
+        // Update BackgroundRenderer state to match the depth settings.
+        try {
+            backgroundRenderer.setUseDepthVisualization(
+                    render, depthSettings.depthColorVisualizationEnabled());
+            backgroundRenderer.setUseOcclusion(render, depthSettings.useDepthForOcclusion());
+        } catch (IOException e) {
+            Log.e(TAG, "Failed to read a required asset file", e);
+            messageSnackbarHelper.showError(this, "Failed to read a required asset file: " + e);
+            return;
+        }
+        // BackgroundRenderer.updateDisplayGeometry must be called every frame to update the coordinates
+        // used to draw the background camera image.
+        backgroundRenderer.updateDisplayGeometry(frame);
+
+        if (camera.getTrackingState() == TrackingState.TRACKING
+                && (depthSettings.useDepthForOcclusion()
+                || depthSettings.depthColorVisualizationEnabled())) {
+            try (Image depthImage = frame.acquireDepthImage16Bits()) {
+                backgroundRenderer.updateCameraDepthTexture(depthImage);
+            } catch (NotYetAvailableException e) {
+                // This normally means that depth data is not available yet. This is normal so we will not
+                // spam the logcat with this.
+            }
+        }
+
+
+        // -- Draw background
+
+        if (frame.getTimestamp() != 0) {
+            // Suppress rendering if the camera did not produce the first frame yet. This is to avoid
+            // drawing possible leftover data from previous sessions if the texture is reused.
+            backgroundRenderer.drawBackground(render);
+        }
+
+        // Get projection matrix.
+        camera.getProjectionMatrix(projectionMatrix, 0, Z_NEAR, Z_FAR);
+
+        // Get camera matrix and draw.
+        camera.getViewMatrix(viewMatrix, 0);
+
+        // Visualize anchors created by touch.
+        render.clear(virtualSceneFramebuffer, 0f, 0f, 0f, 0f);
+
+
+        // Compose the virtual scene with the background.
+        backgroundRenderer.drawVirtualScene(render, virtualSceneFramebuffer, Z_NEAR, Z_FAR);
     }
+
+
 }
