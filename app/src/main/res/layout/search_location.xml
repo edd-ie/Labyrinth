@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:elevation="2dp"
+    android:background="@drawable/search_rows"
+    android:id="@+id/search_row"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:id="@+id/search_badge"
+        android:gravity="start"
+        android:paddingStart="10dp"
+        android:paddingEnd="5dp"
+        >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/route"
+            android:id="@+id/route_icon"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Room 101"
+            android:textSize="18sp"
+            android:textStyle ="bold"
+            android:id="@+id/roomNum"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="|"
+            android:textSize="18sp"
+            android:id="@+id/breaker"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hall name"
+            android:textSize="18sp"
+            android:textStyle ="bold"
+            android:id="@+id/roomLoc"
+            />
+    </LinearLayout>
+
+</LinearLayout>
