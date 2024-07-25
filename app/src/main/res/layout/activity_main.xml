@@ -12,76 +12,13 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:id="@+id/surfaceview"
+        android:id="@+id/ArCamera"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_gravity="top"
         />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:id="@+id/searchPlane"
-        >
 
-        <EditText
-            android:id="@+id/search_bar"
-            android:layout_width="259dp"
-            android:layout_height="53dp"
-            android:layout_marginTop="28dp"
-            android:layout_marginLeft="28dp"
-            android:ems="10"
-            android:inputType="text"
-            android:paddingLeft="5dp"
-            android:text="Start location" />
-
-    </RelativeLayout>
-
-
-    <RelativeLayout
-        android:id="@+id/canvas"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_gravity="bottom"
-        android:background="@drawable/rounded"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintHeight_percent="0.36"
-
-    >
-        <FrameLayout
-            android:id="@+id/layoutToRotate"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"
-            android:background="@drawable/rounded"
-            android:backgroundTint="@android:color/holo_blue_light">
-
-
-<!--            <TextView-->
-<!--                android:id="@+id/text1"-->
-<!--                android:layout_width="244dp"-->
-<!--                android:layout_height="57dp"-->
-<!--                android:textAlignment="center"-->
-<!--                android:layout_gravity="center"-->
-<!--                android:text="Insert Location"-->
-<!--                android:textSize="25dp" />-->
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/rounded"
-                android:contentDescription="map"
-                android:id="@+id/map"
-                android:src="@drawable/map0"
-                />
-        </FrameLayout>
-    </RelativeLayout>
 
 
 
