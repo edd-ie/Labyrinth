@@ -1,17 +1,36 @@
 package edd_ie.com.github.labyrinth;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.shape.CornerFamily;
+import com.google.android.material.shape.MaterialShapeDrawable;
+import com.google.android.material.shape.ShapeAppearanceModel;
 import com.google.ar.core.ArCoreApk;
 import com.google.ar.core.ArCoreApk.Availability;
 import com.google.ar.core.Camera;
@@ -37,13 +56,13 @@ import edd_ie.com.github.labyrinth.renderers.SampleRender;
 import edd_ie.com.github.labyrinth.renderers.arcore.BackgroundRenderer;
 
 
-public class MainActivity extends AppCompatActivity implements SampleRender.Renderer {
+public class MainActivity extends AppCompatActivity implements SampleRender.Renderer, SensorEventListener {
     //Views
     private GLSurfaceView surfaceView;
     private View searchPlane;
     private EditText searchBar;
     private View canvas;
-
+    private ImageView map;
 
 
     private Session session;
@@ -72,6 +91,22 @@ public class MainActivity extends AppCompatActivity implements SampleRender.Rend
     private final float[] viewMatrix = new float[16];
 
 
+    //Senors and layout rotation
+    private SensorManager sensorManager;
+    private Sensor accelerometer;
+    private Sensor magnetometer;
+    private FusedLocationProviderClient fusedLocationClient;
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+
+    private float[] gravity;
+    private float[] geomagnetic;
+    private float azimuth;
+
+    private FrameLayout layoutToRotate;
+    private Location targetLocation;
+
+
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,10 +122,6 @@ public class MainActivity extends AppCompatActivity implements SampleRender.Rend
 
         displayRotationHelper = new DisplayRotationHelper(/* context= */ this);
 
-        // Set up touch listener.
-//        tapHelper = new TapHelper(/* context= */ this);
-//        surfaceView.setOnTouchListener(tapHelper);
-
         // Set up renderer.
         render = new SampleRender(surfaceView, this, getAssets());
 
@@ -98,14 +129,45 @@ public class MainActivity extends AppCompatActivity implements SampleRender.Rend
 
         depthSettings.onCreate(this);
         instantPlacementSettings.onCreate(this);
+
+
+        // Location and rotation
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+
+        layoutToRotate = findViewById(R.id.layoutToRotate);
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+        targetLocation = new Location(LocationManager.GPS_PROVIDER);
+        targetLocation.setLatitude(37.4219999);  // Example latitude
+        targetLocation.setLongitude(-122.0840575);  // Example longitude
+
+        checkLocationPermissionAndGetLocation();
+
+        map = findViewById(R.id.map);
+        float radius = 16f; // Adjust as needed
+
+        ShapeAppearanceModel shapeAppearanceModel =new ShapeAppearanceModel.Builder()
+                .setTopLeftCorner(CornerFamily.ROUNDED, radius)
+                .setTopRightCorner(CornerFamily.ROUNDED, radius)
+                .build();
+
+        MaterialShapeDrawable frameLayoutBackground = new MaterialShapeDrawable(shapeAppearanceModel);
+        frameLayoutBackground.setFillColor(ColorStateList.valueOf(ContextCompat.getColor(this, android.R.color.holo_blue_light)));
+
+        layoutToRotate.setBackground(frameLayoutBackground);
+
+        MaterialShapeDrawable imageViewBackground = new MaterialShapeDrawable(shapeAppearanceModel);
+        map.setBackground(imageViewBackground);
+        map.setScaleType(ImageView.ScaleType.CENTER_CROP);
     }
 
     @Override
     protected void onDestroy() {
         if (session != null) {
             // Explicitly close ARCore Session to release native resources.
-            // Review the API reference for important considerations before calling close() in apps with
-            // more complicated lifecycle requirements:
             // https://developers.google.com/ar/reference/java/arcore/reference/com/google/ar/core/Session#close()
             session.close();
             session = null;
@@ -188,6 +250,10 @@ public class MainActivity extends AppCompatActivity implements SampleRender.Rend
 
         surfaceView.onResume();
         displayRotationHelper.onResume();
+
+        //Location and rotation
+        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI);
+        sensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_UI);
     }
 
     @Override
@@ -201,6 +267,10 @@ public class MainActivity extends AppCompatActivity implements SampleRender.Rend
             surfaceView.onPause();
             session.pause();
         }
+
+        //Location and rotation
+        sensorManager.unregisterListener(this, accelerometer);
+        sensorManager.unregisterListener(this, magnetometer);
     }
 
     @Override
@@ -266,7 +336,7 @@ public class MainActivity extends AppCompatActivity implements SampleRender.Rend
         // initialized during the execution of onSurfaceCreated.
         if (!hasSetTextureNames) {
             session.setCameraTextureNames(
-                    new int[] {backgroundRenderer.getCameraColorTexture().getTextureId()});
+                    new int[]{backgroundRenderer.getCameraColorTexture().getTextureId()});
             hasSetTextureNames = true;
         }
 
@@ -291,24 +361,82 @@ public class MainActivity extends AppCompatActivity implements SampleRender.Rend
 
     }
 
-    private void searchFocus(){
-        if(searchBar!=null){
+    private void searchFocus() {
+        if (searchBar != null) {
             searchBar.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
-                   if(hasFocus){
-                       canvas.setVisibility(View.INVISIBLE);
-                       surfaceView.setVisibility(View.INVISIBLE);
-                       searchPlane.setBackgroundColor(ContextCompat.getColor(v.getContext(), R.color.white));
-                   }
-                   else{
-                       searchPlane.setBackgroundColor(Color.TRANSPARENT);
-                       canvas.setVisibility(View.VISIBLE);
-                       surfaceView.setVisibility(View.VISIBLE);
-                   }
+                    if (hasFocus) {
+                        canvas.setVisibility(View.INVISIBLE);
+                        surfaceView.setVisibility(View.INVISIBLE);
+                        searchPlane.setBackgroundColor(ContextCompat.getColor(v.getContext(), R.color.white));
+                    } else {
+                        searchPlane.setBackgroundColor(Color.TRANSPARENT);
+                        canvas.setVisibility(View.VISIBLE);
+                        surfaceView.setVisibility(View.VISIBLE);
+                    }
                 }
             });
         }
     }
 
+
+    //Location and Rotation
+
+    private void checkLocationPermissionAndGetLocation() {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // Request permissions
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION},
+                    LOCATION_PERMISSION_REQUEST_CODE);
+        }
+        else {
+            // Permissions already granted
+            fusedLocationClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    if (location != null) {
+                        // Use the location data here if needed
+                        calculateAndRotateLayout(location);
+                            } else {
+                                Toast.makeText(MainActivity.this, "Unable to get location", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+        }
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            gravity = event.values;
+        } else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
+            geomagnetic = event.values;
+        }
+
+        if (gravity != null && geomagnetic != null) {
+            float[] R = new float[9];
+            float[] I = new float[9];
+            boolean success = SensorManager.getRotationMatrix(R, I, gravity, geomagnetic);
+            if (success) {
+                float[] orientation = new float[3];
+                SensorManager.getOrientation(R, orientation);
+                azimuth = (float) Math.toDegrees(orientation[0]); // orientation contains: azimuth, pitch and roll
+                azimuth = (azimuth + 360) % 360;
+            }
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
+
+    //Rotating layout
+    private void calculateAndRotateLayout(Location currentLocation) {
+        float bearingToTarget = currentLocation.bearingTo(targetLocation);
+        float rotation = (bearingToTarget - azimuth + 360) % 360;
+        layoutToRotate.setRotation(rotation);
+    }
 }

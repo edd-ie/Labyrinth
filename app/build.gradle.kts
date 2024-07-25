@@ -48,6 +48,7 @@ dependencies {
     implementation(libs.core.ktx)
     implementation(libs.monitor)
     implementation(libs.junit.junit)
+    implementation(libs.play.services.location)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

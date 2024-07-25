@@ -14,6 +14,7 @@ kotlin = "2.0.0"
 coreKtx = "1.13.1"
 monitor = "1.7.1"
 junitJunit = "4.12"
+playServicesLocation = "21.3.0"
 
 [libraries]
 core = { module = "com.google.ar:core", version.ref = "core" }
@@ -29,6 +30,7 @@ obj = { module = "de.javagl:obj", version.ref = "obj" }
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 monitor = { group = "androidx.test", name = "monitor", version.ref = "monitor" }
 junit-junit = { group = "junit", name = "junit", version.ref = "junitJunit" }
+play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
