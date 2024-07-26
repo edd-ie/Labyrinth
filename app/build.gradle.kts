@@ -42,6 +42,9 @@ dependencies {
     // https://github.com/javagl/Obj
     implementation(libs.obj)
 
+    // FirebaseUI for Cloud Firestore
+    implementation(libs.firebase.ui.firestore)
+
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)

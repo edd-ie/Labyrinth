@@ -13,8 +13,8 @@ import edd_ie.com.github.labyrinth.helpers.FullScreenHelper;
 public class MainActivity extends AppCompatActivity{
     private ImageView searchIcon;
 
-    private Float startGpsLocation;
-    private Float endGpsLocation;
+    private double startGpsLocation;
+    private double endGpsLocation;
     private String inputLocation;
 
     @Override
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity{
 
     public void handleNavigationBtn(){
         searchIcon.setOnClickListener((e)->{
-            Intent intent = new Intent(MainActivity.this, SearchDetails.class);
+            Intent intent = new Intent(MainActivity.this, SearchWindow.class);
             startActivity(intent);
         });
 
