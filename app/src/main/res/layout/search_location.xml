@@ -17,6 +17,8 @@
         android:gravity="start"
         android:paddingStart="10dp"
         android:paddingEnd="5dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
         >
 
         <ImageView
@@ -31,13 +33,13 @@
             android:text="Room 101"
             android:textSize="18sp"
             android:textStyle ="bold"
-            android:id="@+id/roomNum"
+            android:id="@+id/room_number"
             />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="|"
+            android:text=","
             android:textSize="18sp"
             android:id="@+id/breaker"
             android:layout_marginLeft="5dp"
@@ -47,10 +49,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Hall name"
+            android:text="Building name"
             android:textSize="18sp"
             android:textStyle ="bold"
-            android:id="@+id/roomLoc"
+            android:id="@+id/building_name"
             />
     </LinearLayout>
 

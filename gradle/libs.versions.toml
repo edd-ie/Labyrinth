@@ -15,6 +15,8 @@ coreKtx = "1.13.1"
 monitor = "1.7.1"
 junitJunit = "4.12"
 playServicesLocation = "21.3.0"
+googleGmsGoogleServices = "4.4.2"
+firebaseFirestore = "25.0.0"
 
 [libraries]
 core = { module = "com.google.ar:core", version.ref = "core" }
@@ -31,8 +33,10 @@ core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx"
 monitor = { group = "androidx.test", name = "monitor", version.ref = "monitor" }
 junit-junit = { group = "junit", name = "junit", version.ref = "junitJunit" }
 play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
+firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+google-gms-google-services = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }
 

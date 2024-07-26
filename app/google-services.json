@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "199102056737",
+    "project_id": "labyrinth-c758c",
+    "storage_bucket": "labyrinth-c758c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:199102056737:android:142619b9dceb75a6339660",
+        "android_client_info": {
+          "package_name": "edd_ie.com.github.labyrinth"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJlZTFAsTIo8W8kDAYMFIA756WWe5oO8k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

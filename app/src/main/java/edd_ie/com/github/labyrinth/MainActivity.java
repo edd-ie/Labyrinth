@@ -1,5 +1,6 @@
 package edd_ie.com.github.labyrinth;
 
+import android.annotation.SuppressLint;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 
@@ -10,13 +11,21 @@ import edd_ie.com.github.labyrinth.helpers.FullScreenHelper;
 
 
 public class MainActivity extends AppCompatActivity{
-    GLSurfaceView arCamera;
+    private GLSurfaceView arCamera;
 
+    private Float startGpsLocation;
+    private Float endGpsLocation;
+    private String inputLocation;
+
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+
+        //Initialization
+        arCamera = findViewById(R.id.ArCamera);
 
     }
 
@@ -30,11 +39,18 @@ public class MainActivity extends AppCompatActivity{
     protected void onResume() {
         super.onResume();
 
+        try{
+            startGpsLocation = getIntent().getExtras().getFloat("startGps");
+            endGpsLocation = getIntent().getExtras().getFloat("endGps");
+        }
+        catch (NullPointerException ignored){
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
+
 
     }
 
