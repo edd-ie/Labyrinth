@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class SearchDetails extends AppCompatActivity {
     private EditText startLocation;
@@ -18,6 +19,8 @@ public class SearchDetails extends AppCompatActivity {
     private ImageView myLocationBtn;
     private Button startNavigation;
     private ImageView backBtn;
+    private EditText searchBar;
+    private RecyclerView searchResults;
 
     private Float currentGpsLocation;
     private Float endGpsLocation;
@@ -37,20 +40,15 @@ public class SearchDetails extends AppCompatActivity {
 
         //Elements
         startNavigation = findViewById(R.id.start_navigation);
-        backBtn = findViewById(R.id.return_btn);
+        searchBar = findViewById(R.id.search);
+        searchResults = findViewById(R.id.recyclerView);
+        backBtn = findViewById(R.id.backBtn);
 
         //Event listeners
-        handleBackBtn();
         handleNavigationBtn();
+        handleBackBtn();
     }
 
-    public void handleBackBtn(){
-        backBtn.setOnClickListener((e)->{
-            Intent intent = new Intent(SearchDetails.this, MainActivity.class);
-            intent.putExtra("endLocationName", inputLocation);
-            startActivity(intent);
-        });
-    }
 
     public void handleNavigationBtn(){
         startNavigation.setOnClickListener((e)->{
@@ -62,4 +60,13 @@ public class SearchDetails extends AppCompatActivity {
         });
 
     }
+
+    public void handleBackBtn(){
+        startNavigation.setOnClickListener((e)->{
+            Intent intent = new Intent(SearchDetails.this, MainActivity.class);
+            startActivity(intent);
+        });
+
+    }
+
 }

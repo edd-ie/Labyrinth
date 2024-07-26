@@ -1,8 +1,8 @@
 package edd_ie.com.github.labyrinth;
 
-import android.annotation.SuppressLint;
-import android.opengl.GLSurfaceView;
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,13 +11,12 @@ import edd_ie.com.github.labyrinth.helpers.FullScreenHelper;
 
 
 public class MainActivity extends AppCompatActivity{
-    private GLSurfaceView arCamera;
+    private ImageView searchIcon;
 
     private Float startGpsLocation;
     private Float endGpsLocation;
     private String inputLocation;
 
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,8 +24,9 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
 
         //Initialization
-        arCamera = findViewById(R.id.ArCamera);
+        searchIcon = findViewById(R.id.search_icon);
 
+        handleNavigationBtn();
     }
 
     @Override
@@ -39,12 +39,12 @@ public class MainActivity extends AppCompatActivity{
     protected void onResume() {
         super.onResume();
 
-        try{
-            startGpsLocation = getIntent().getExtras().getFloat("startGps");
-            endGpsLocation = getIntent().getExtras().getFloat("endGps");
-        }
-        catch (NullPointerException ignored){
-        }
+//        try{
+//            startGpsLocation = getIntent().getExtras().getFloat("startGps");
+//            endGpsLocation = getIntent().getExtras().getFloat("endGps");
+//        }
+//        catch (NullPointerException ignored){
+//        }
     }
 
     @Override
@@ -63,6 +63,14 @@ public class MainActivity extends AppCompatActivity{
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         FullScreenHelper.setFullScreenOnWindowFocusChanged(this, hasFocus);
+    }
+
+    public void handleNavigationBtn(){
+        searchIcon.setOnClickListener((e)->{
+            Intent intent = new Intent(MainActivity.this, SearchDetails.class);
+            startActivity(intent);
+        });
+
     }
 
 
