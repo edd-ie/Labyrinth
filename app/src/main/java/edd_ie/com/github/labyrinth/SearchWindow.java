@@ -79,8 +79,7 @@ public class SearchWindow extends AppCompatActivity {
     private void performDatabaseSearch(String searchTerm) {
         // Database search logic here
         Query query = FirebaseUtil.allLocations()
-                .whereGreaterThanOrEqualTo("room",searchTerm)
-                .whereLessThanOrEqualTo("room",searchTerm+'\uf8ff');
+                .whereGreaterThanOrEqualTo("room",searchTerm);
 
         FirestoreRecyclerOptions<LocationModel> options = new FirestoreRecyclerOptions.Builder<LocationModel>()
                 .setQuery(query,LocationModel.class).build();
@@ -89,5 +88,26 @@ public class SearchWindow extends AppCompatActivity {
         searchList.setLayoutManager(new LinearLayoutManager(this));
         searchList.setAdapter(searchLocation);
         searchLocation.startListening();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(searchLocation!=null)
+            searchLocation.startListening();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(searchLocation!=null)
+            searchLocation.stopListening();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(searchLocation!=null)
+            searchLocation.startListening();
     }
 }

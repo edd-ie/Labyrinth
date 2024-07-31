@@ -11,7 +11,7 @@
     <LinearLayout
         android:id="@+id/menu_bar"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
+        android:layout_height="50dp"
         android:background="@color/black"
         android:paddingLeft="10dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -22,66 +22,13 @@
             android:id="@+id/backBtn"
             android:layout_width="44dp"
             android:layout_height="45dp"
-            app:srcCompat="@drawable/back" />
+            app:srcCompat="@drawable/back"
+            android:layout_gravity="center"
+            />
 
     </LinearLayout>
 
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/relativeLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:background="@android:color/transparent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/menu_bar">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="405dp"
-            android:layout_height="180dp"
-            android:layout_below="@id/search"
-            android:layout_marginTop="28dp"
-            android:scrollbars="vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.309"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/search" />
-
-        <androidx.appcompat.widget.SearchView
-            android:id="@+id/search"
-            android:layout_width="340dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/search_bkg"
-            android:focusable="false"
-            app:closeIcon="@drawable/clear"
-            app:iconifiedByDefault="false"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.067"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:queryHint="Start location..."
-            app:searchHintIcon="@null"
-            app:searchIcon="@drawable/search" />
-
-        <ImageView
-            android:id="@+id/myLocation"
-            android:layout_width="42dp"
-            android:layout_height="45dp"
-            android:layout_alignParentEnd="true"
-            app:layout_constraintBottom_toBottomOf="@+id/search"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/search"
-            app:layout_constraintTop_toTopOf="@+id/search"
-            app:layout_constraintVertical_bias="0.0"
-            app:srcCompat="@drawable/my_location" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
         android:id="@+id/end_label"
@@ -95,29 +42,60 @@
         app:layout_constraintHorizontal_bias="0.094"
         app:layout_constraintStart_toStartOf="parent" />
 
+
     <TextView
         android:id="@+id/end_location"
         android:layout_width="304dp"
         android:layout_height="50dp"
-        android:layout_marginBottom="372dp"
+        android:layout_marginBottom="528dp"
         android:ems="10"
         android:text="Room 11 , Ext Building"
         android:textSize="28sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.252"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/start_label"
+        android:layout_width="126dp"
+        android:layout_height="34dp"
+        android:layout_marginBottom="16dp"
+        android:text="Start : "
+        android:textSize="19sp"
+        app:layout_constraintBottom_toTopOf="@+id/start_location"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.094"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/start_location"
+        android:layout_width="304dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="396dp"
+        android:ems="10"
+        android:text="Room 11, Ext Building"
+        android:textSize="28sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.252"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/start_navigation"
-        android:layout_width="208dp"
-        android:layout_height="60dp"
-        android:layout_marginBottom="72dp"
+        android:layout_width="232dp"
+        android:layout_height="74dp"
+        android:layout_marginBottom="148dp"
+        android:gravity="center"
         android:text="Start Navigation"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.645"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:textStyle="bold"
+        android:textSize="20dp"
+        />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

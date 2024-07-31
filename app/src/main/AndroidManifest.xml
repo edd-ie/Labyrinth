@@ -34,7 +34,7 @@
         android:theme="@style/Theme.Labyrinth"
         tools:targetApi="31">
         <activity
-            android:name=".SearchEndLocation"
+            android:name=".SearchStartLocation"
             android:exported="false" />
         <activity
             android:name=".SearchWindow"

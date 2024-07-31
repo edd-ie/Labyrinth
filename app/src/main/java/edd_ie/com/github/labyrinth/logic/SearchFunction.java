@@ -1,6 +1,7 @@
 package edd_ie.com.github.labyrinth.logic;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
 import edd_ie.com.github.labyrinth.R;
+import edd_ie.com.github.labyrinth.SearchStartLocation;
 
 public class SearchFunction extends FirestoreRecyclerAdapter<LocationModel, SearchFunction.SearchViewModal> {
     Context context;
@@ -27,6 +29,13 @@ public class SearchFunction extends FirestoreRecyclerAdapter<LocationModel, Sear
     protected void onBindViewHolder(@NonNull SearchViewModal holder, int position, @NonNull LocationModel model) {
         holder.room.setText(model.getRoom());
         holder.building.setText(model.getBuilding());
+
+        holder.itemView.setOnClickListener(v ->{
+            //navigate to chat activity
+            Intent intent = new Intent(context, SearchStartLocation.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        });
     }
 
     @NonNull

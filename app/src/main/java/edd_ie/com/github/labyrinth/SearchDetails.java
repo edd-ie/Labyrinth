@@ -3,24 +3,20 @@ package edd_ie.com.github.labyrinth;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class SearchDetails extends AppCompatActivity {
-    private EditText startLocation;
-    private EditText endLocation;
-    private ImageView myLocationBtn;
+    private TextView startLocation;
+    private TextView endLocation;
     private Button startNavigation;
     private ImageView backBtn;
-    private EditText searchBar;
-    private RecyclerView searchResults;
 
     private Float currentGpsLocation;
     private Float endGpsLocation;
@@ -40,9 +36,9 @@ public class SearchDetails extends AppCompatActivity {
 
         //Elements
         startNavigation = findViewById(R.id.start_navigation);
-        searchBar = findViewById(R.id.search);
-        searchResults = findViewById(R.id.recyclerView);
         backBtn = findViewById(R.id.backBtn);
+        startLocation = findViewById(R.id.start_location);
+        endLocation = findViewById(R.id.end_location);
 
         //Event listeners
         handleNavigationBtn();

@@ -7,7 +7,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class FirebaseUtil {
 
     public static CollectionReference allLocations(){
-        return FirebaseFirestore.getInstance().collection("users");
+        return FirebaseFirestore.getInstance().collection("location");
+    }
+
+    public static CollectionReference allCorners(){
+        return FirebaseFirestore.getInstance().collection("corners");
     }
 
     public static DocumentReference getChatroomReference(String chatroomId){
