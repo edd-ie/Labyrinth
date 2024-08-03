@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity{
 
     public void handleNavigationBtn(){
         searchIcon.setOnClickListener((e)->{
-            Intent intent = new Intent(MainActivity.this, SearchWindow.class);
+            Intent intent = new Intent(MainActivity.this, SearchDestination.class);
             startActivity(intent);
         });
 

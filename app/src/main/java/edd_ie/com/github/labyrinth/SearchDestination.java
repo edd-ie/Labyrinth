@@ -20,7 +20,7 @@ import edd_ie.com.github.labyrinth.logic.LocationModel;
 import edd_ie.com.github.labyrinth.logic.SearchFunction;
 import edd_ie.com.github.labyrinth.utils.FirebaseUtil;
 
-public class SearchWindow extends AppCompatActivity {
+public class SearchDestination extends AppCompatActivity {
     private SearchView searchbar;
     private RecyclerView searchList;
     private ImageView backBtn;
@@ -30,7 +30,7 @@ public class SearchWindow extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_search_window);
+        setContentView(R.layout.activity_search_destination);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -51,7 +51,7 @@ public class SearchWindow extends AppCompatActivity {
     private void goToPreviousWindow(){
         if(backBtn != null){
             backBtn.setOnClickListener((btn)->{
-                startActivity(new Intent(SearchWindow.this, MainActivity.class));
+                startActivity(new Intent(SearchDestination.this, MainActivity.class));
             });
         }
     }

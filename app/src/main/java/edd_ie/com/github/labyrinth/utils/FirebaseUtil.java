@@ -14,17 +14,17 @@ public class FirebaseUtil {
         return FirebaseFirestore.getInstance().collection("corners");
     }
 
-    public static DocumentReference getChatroomReference(String chatroomId){
-        return FirebaseFirestore.getInstance().collection("chatrooms").document(chatroomId);
-    }
-
-    public static CollectionReference getChatroomMessageReference(String chatroomId){
-        return getChatroomReference(chatroomId).collection("chats");
-    }
-
-    public static CollectionReference allChatroomCollectionReference(){
-        return FirebaseFirestore.getInstance().collection("chatrooms");
-    }
+//    public static DocumentReference getChatroomReference(String chatroomId){
+//        return FirebaseFirestore.getInstance().collection("chatrooms").document(chatroomId);
+//    }
+//
+//    public static CollectionReference getChatroomMessageReference(String chatroomId){
+//        return getChatroomReference(chatroomId).collection("chats");
+//    }
+//
+//    public static CollectionReference allChatroomCollectionReference(){
+//        return FirebaseFirestore.getInstance().collection("chatrooms");
+//    }
 
 
 //    public static void logout(){

@@ -37,7 +37,7 @@
             android:name=".SearchStartLocation"
             android:exported="false" />
         <activity
-            android:name=".SearchWindow"
+            android:name=".SearchDestination"
             android:exported="false" />
         <activity
             android:name=".SearchDetails"
